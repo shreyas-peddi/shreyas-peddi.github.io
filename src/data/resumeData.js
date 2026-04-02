@@ -5,7 +5,7 @@ export const personal = {
   phone: '+1-470-854-0071',
   github: 'https://github.com/shreyas-peddi',
   linkedin: 'https://www.linkedin.com/in/shreyas-peddi/',
-  resumePdf: '/resume-page/resume_v3.pdf',
+  resumePdf: '/resume_v3.pdf',
   taglines: [
     'Software Engineer',
     'ML Enthusiast',
