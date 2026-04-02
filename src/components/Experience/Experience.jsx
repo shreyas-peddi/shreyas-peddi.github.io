@@ -149,6 +149,13 @@ const CompanyName = styled.h3`
   color: ${theme.colors.charcoal};
 `
 
+const BadgeRow = styled.div`
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+`
+
 const RoleBadge = styled.span`
   background: ${props => props.$color};
   color: ${theme.colors.cream};
@@ -156,6 +163,17 @@ const RoleBadge = styled.span`
   font-weight: 700;
   font-size: 0.75rem;
   padding: 4px 12px;
+  border-radius: 20px;
+  border: 2px solid ${theme.colors.charcoal};
+`
+
+const PromoBadge = styled(motion.span)`
+  background: ${theme.colors.gold};
+  color: ${theme.colors.charcoal};
+  font-family: ${theme.fonts.body};
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 4px 10px;
   border-radius: 20px;
   border: 2px solid ${theme.colors.charcoal};
 `
@@ -227,7 +245,18 @@ function ExperienceItem({ job, index, roadRef }) {
         <CardAccent $color={job.color} />
         <CompanyRow>
           <CompanyName>{job.icon} {job.company}</CompanyName>
-          <RoleBadge $color={job.color}>{job.role}</RoleBadge>
+          <BadgeRow>
+            {job.badge && (
+              <PromoBadge
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 10, delay: 0.3 }}
+              >
+                {job.badge}
+              </PromoBadge>
+            )}
+            <RoleBadge $color={job.color}>{job.role}</RoleBadge>
+          </BadgeRow>
         </CompanyRow>
         <MetaRow>
           <MetaItem><Calendar size={12} weight="bold" />{job.period}</MetaItem>

@@ -7,35 +7,51 @@ export const personal = {
   linkedin: 'https://www.linkedin.com/in/shreyas-peddi/',
   resumePdf: '/resume_v3.pdf',
   taglines: [
+    'Data Scientist',
     'Software Engineer',
     'ML Enthusiast',
+    'Full-Stack Builder',
     'React Developer',
     'CS Grad @ UGA',
-    'Full-Stack Builder',
   ],
-  about: `Hey, I'm Shreyas — a CS grad from UGA with a knack for building software that actually scales.
-I've shipped React apps to 100K+ daily users, automated CI/CD pipelines that slashed deployment errors in half,
-and dug deep into federated learning and medical AI research. Whether it's designing agentic AI workflows
-for real estate data or training CNNs for glaucoma detection, I love tackling problems that sit at the
-intersection of engineering and impact. Currently based in Atlanta and always up for the next challenge.`,
+  about: `Hey, I'm Shreyas — a CS grad from UGA who lives at the intersection of data science and software engineering.
+Currently working as a Data Scientist at Octave Holdings, where I build AI pipelines that turn dense real estate documents
+into structured insights instantly. I've shipped React apps to 100K+ daily users, automated CI/CD pipelines, and done
+deep research in federated learning and medical AI. I speak four languages, hold five tech certifications, and I'm always
+chasing the next hard problem. Based in Atlanta and open to what's next.`,
 }
 
 export const experience = [
   {
     id: 1,
     company: 'Octave Holdings & Investments',
-    role: 'IT Intern',
-    period: 'Aug 2025 – Present',
+    role: 'Data Scientist',
+    badge: '🌟 Current Role',
+    period: 'Nov 2025 – Present',
     location: 'Alpharetta, GA',
     color: '#5C7A5C',
-    icon: '🏢',
+    icon: '📊',
     highlights: [
-      'Built agentic AI workflows to extract and structure critical lease data from unstructured real estate documents — enabling faster property decisions.',
-      'Implemented Twilio SMS MFA and supported IT infrastructure to keep internal services secure and rock-solid.',
+      'Building data science models and AI-driven pipelines to surface insights from complex real estate and investment data.',
+      'Promoted from IT Intern after 3 months — recognizing impact delivered on AI automation and infrastructure projects.',
     ],
   },
   {
     id: 2,
+    company: 'Octave Holdings & Investments',
+    role: 'IT Intern',
+    period: 'Aug 2025 – Nov 2025',
+    location: 'Alpharetta, GA',
+    color: '#6B8F71',
+    icon: '🏢',
+    highlights: [
+      'Built AI-driven automation tools to generate detailed lease abstracts from extensive multi-document lease data.',
+      'Implemented Twilio SMS MFA to secure internal services against unauthorized access.',
+      'Developed a centralized call queue system — reduced phone number overhead and cut operational costs.',
+    ],
+  },
+  {
+    id: 3,
     company: 'NCR Atleos',
     role: 'Software Engineer Intern',
     period: 'May 2024 – Aug 2024',
@@ -43,12 +59,13 @@ export const experience = [
     color: '#C17B5C',
     icon: '⚙️',
     highlights: [
-      'Automated Postman API testing with Azure DevOps CI/CD — cut manual testing time by a whopping 400%.',
-      'Built CI pipelines for Logstash with JFROG and SONAR scans, slashing deployment errors by 50%.',
+      'Automated Postman API testing integrated with Azure DevOps CI/CD — cut manual testing time by 400%.',
+      'Generated detailed test reports and analytics using Azure DevOps, improving visibility into software quality via SONAR scans.',
+      'Built a CI pipeline for Logstash with Azure DevOps, automating deployments to JFROG.',
     ],
   },
   {
-    id: 3,
+    id: 4,
     company: "Byju's",
     role: 'Software Engineer',
     period: 'Jun 2022 – Mar 2023',
@@ -56,20 +73,22 @@ export const experience = [
     color: '#D4A843',
     icon: '🚀',
     highlights: [
-      'Built high-traffic React.js applications that kept 100K+ daily users engaged with zero downtime.',
-      'Developed Node.js + Express.js backend APIs that seamlessly tied user workflows to CRM systems.',
+      'Created dynamic, high-traffic React.js webpages for major campaigns — handling thousands of concurrent users with zero downtime.',
+      'Built and implemented APIs for user registration that seamlessly integrated with CRM systems.',
+      'Developed an internal tool to rapidly generate personalized web pages, speeding up the team\'s entire content workflow.',
     ],
   },
   {
-    id: 4,
+    id: 5,
     company: 'HighRadius',
-    role: 'Tech Intern',
+    role: 'Intern',
     period: 'Jun 2021 – May 2022',
     location: 'Remote',
     color: '#E8B4A0',
     icon: '💡',
     highlights: [
-      'Built internal web tools that improved onboarding workflows and boosted UI performance by 30%.',
+      'Built user-friendly front-end interfaces for multiple internal company applications.',
+      'Designed and developed a full intern onboarding web app — end-to-end internship management from application to offboarding.',
     ],
   },
 ]
@@ -162,18 +181,33 @@ export const education = [
     school: 'University of Georgia',
     degree: 'MS in Computer Science',
     gpa: '3.7',
-    period: 'Aug 2023 – May 2025',
+    period: 'Aug 2023 – Apr 2025',
     location: 'Athens, GA',
     color: '#5C7A5C',
   },
   {
-    school: 'SRM University',
-    degree: 'BTech in CS (Data Science)',
+    school: 'SRM University, AP',
+    degree: 'BTech in Computer Science',
     gpa: '8.3 / 10',
-    period: 'Jul 2018 – May 2022',
-    location: 'Amaravathi, India',
+    period: '2018 – 2022',
+    location: 'Amaravati, India',
     color: '#C17B5C',
   },
+]
+
+export const certifications = [
+  { name: 'Computer Vision Basics', issuer: 'Coursera', icon: '👁️', color: '#5C7A5C' },
+  { name: 'Foundations: Data, Data, Everywhere', issuer: 'Google', icon: '📊', color: '#C17B5C' },
+  { name: 'Interactive Coding: CSS, HTML & Web Dev', issuer: 'Online', icon: '💻', color: '#D4A843' },
+  { name: 'Java Tutorial', issuer: 'Online', icon: '☕', color: '#6B8F71' },
+  { name: 'PHP Tutorial', issuer: 'Online', icon: '🐘', color: '#E8B4A0' },
+]
+
+export const languages = [
+  { lang: 'English', level: 'Professional Working', flag: '🇺🇸' },
+  { lang: 'Telugu', level: 'Professional Working', flag: '🇮🇳' },
+  { lang: 'Hindi', level: 'Limited Working', flag: '🇮🇳' },
+  { lang: 'German', level: 'Elementary', flag: '🇩🇪' },
 ]
 
 export const publication = {

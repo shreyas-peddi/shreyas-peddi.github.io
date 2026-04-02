@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import { theme } from '../../styles/theme'
-import { education, publication } from '../../data/resumeData'
+import { education, publication, languages } from '../../data/resumeData'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
-import { GraduationCap, MapPin, BookOpen } from '@phosphor-icons/react'
+import { GraduationCap, MapPin, BookOpen, ChatTeardrop } from '@phosphor-icons/react'
 
 const EduSection = styled.section`
   padding: 100px 24px;
@@ -166,6 +166,47 @@ const PubMeta = styled.p`
   line-height: 1.6;
 `
 
+// Languages
+const LangGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+`
+
+const LangChip = styled(motion.div)`
+  background: ${theme.colors.cream};
+  border: 2.5px solid ${theme.colors.charcoal};
+  border-radius: 16px;
+  padding: 12px 20px;
+  box-shadow: ${theme.shadows.card};
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+`
+
+const LangFlag = styled.span`
+  font-size: 1.6rem;
+`
+
+const LangInfo = styled.div``
+
+const LangName = styled.div`
+  font-family: ${theme.fonts.display};
+  font-size: 1rem;
+  color: ${theme.colors.charcoal};
+`
+
+const LangLevel = styled.div`
+  font-family: ${theme.fonts.body};
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: ${theme.colors.charcoalLight};
+  margin-top: 2px;
+`
+
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i) => ({
@@ -228,6 +269,37 @@ export default function Education() {
             </EduCard>
           ))}
         </CardsGrid>
+
+        {/* Languages */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', damping: 18, delay: 0.1 }}
+        >
+          <SectionLabel style={{ marginTop: 60, display: 'block' }}>How I communicate</SectionLabel>
+          <SectionTitle style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', marginBottom: 0 }}>
+            Languages
+          </SectionTitle>
+          <LangGrid>
+            {languages.map((l, i) => (
+              <LangChip
+                key={l.lang}
+                initial={{ opacity: 0, y: 20, rotate: -3 }}
+                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, type: 'spring', damping: 14 }}
+                whileHover={{ y: -4, rotate: 2, boxShadow: theme.shadows.cardHover }}
+              >
+                <LangFlag>{l.flag}</LangFlag>
+                <LangInfo>
+                  <LangName>{l.lang}</LangName>
+                  <LangLevel>{l.level}</LangLevel>
+                </LangInfo>
+              </LangChip>
+            ))}
+          </LangGrid>
+        </motion.div>
 
         {/* Publication */}
         <PubCard
