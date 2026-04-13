@@ -7,33 +7,30 @@ export const personal = {
   linkedin: 'https://www.linkedin.com/in/shreyas-peddi/',
   resumePdf: '/resume_v3.pdf',
   taglines: [
-    'Data Scientist',
+    'AI Engineer',
     'Software Engineer',
-    'ML Enthusiast',
-    'Full-Stack Builder',
+    'Full-Stack Developer',
     'React Developer',
     'CS Grad @ UGA',
   ],
-  about: `Hey, I'm Shreyas — a CS grad from UGA who lives at the intersection of data science and software engineering.
-Currently working as a Data Scientist at Octave Holdings, where I build AI pipelines that turn dense real estate documents
-into structured insights instantly. I've shipped React apps to 100K+ daily users, automated CI/CD pipelines, and done
-deep research in federated learning and medical AI. I speak four languages, hold five tech certifications, and I'm always
-chasing the next hard problem. Based in Atlanta and open to what's next.`,
+  about: `Hey, I'm Shreyas — a CS grad from UGA building production AI systems at the intersection of large language models, software engineering, and real-world business problems. Currently leading AI transformation at Octave Holdings as an AI Engineer: I've shipped Gemini-powered tools that extract structured data from commercial leases, built RAG pipelines that let teams have natural-language conversations with their documents, and deployed internal chatbots that surface investment insights from unstructured data. Before that: shipped React apps at scale, automated CI/CD infrastructure, and published research in federated learning and medical AI. Four languages, five certifications, always chasing the hardest problem in the room. Based in Atlanta and open to what's next.`,
 }
 
 export const experience = [
   {
     id: 1,
     company: 'Octave Holdings & Investments',
-    role: 'Data Scientist',
+    role: 'AI Engineer',
     badge: '🌟 Current Role',
     period: 'Nov 2025 – Present',
     location: 'Alpharetta, GA',
     color: '#5C7A5C',
     icon: '📊',
     highlights: [
-      'Building data science models and AI-driven pipelines to surface insights from complex real estate and investment data.',
-      'Promoted from IT Intern after 3 months — recognizing impact delivered on AI automation and infrastructure projects.',
+      'Leading the company\'s AI transformation end-to-end — defining tooling strategy, selecting models, and shipping production LLM systems that directly change how the business operates.',
+      'Built a Gemini-powered lease abstractor with dual capability: automated structured extraction of rent schedules, termination clauses, and renewal options from complex commercial leases, plus a RAG pipeline enabling analysts to upload documents and query them in natural language.',
+      'Developed a suite of internal AI chatbots powered by Google Gemini that surface real estate and investment insights from unstructured proprietary data — cutting analyst research time from hours to minutes.',
+      'Promoted from IT Intern to AI Engineer in under 3 months, recognized for the speed and production impact of shipped AI products.',
     ],
   },
   {
@@ -45,9 +42,9 @@ export const experience = [
     color: '#6B8F71',
     icon: '🏢',
     highlights: [
-      'Built AI-driven automation tools to generate detailed lease abstracts from extensive multi-document lease data.',
-      'Implemented Twilio SMS MFA to secure internal services against unauthorized access.',
-      'Developed a centralized call queue system — reduced phone number overhead and cut operational costs.',
+      'Prototyped the AI-driven lease abstraction pipeline that became the foundation of the company\'s entire production AI stack.',
+      'Integrated Twilio SMS MFA across internal services, hardening authentication and eliminating unauthorized access vectors.',
+      'Built a centralized call queue system that consolidated fragmented phone infrastructure, reducing telecom overhead and simplifying operations.',
     ],
   },
   {
@@ -59,9 +56,9 @@ export const experience = [
     color: '#C17B5C',
     icon: '⚙️',
     highlights: [
-      'Automated Postman API testing integrated with Azure DevOps CI/CD — cut manual testing time by 400%.',
-      'Generated detailed test reports and analytics using Azure DevOps, improving visibility into software quality via SONAR scans.',
-      'Built a CI pipeline for Logstash with Azure DevOps, automating deployments to JFROG.',
+      'Engineered automated API test suites in Postman integrated with Azure DevOps CI/CD, eliminating hundreds of hours of manual QA per release cycle.',
+      'Built test analytics dashboards and SONAR quality gates in Azure DevOps, giving engineering teams real-time visibility into code coverage and release health.',
+      'Designed and shipped a Logstash CI/CD pipeline with JFrog Artifactory, removing all manual deployment steps and cutting config rollout time.',
     ],
   },
   {
@@ -73,9 +70,9 @@ export const experience = [
     color: '#D4A843',
     icon: '🚀',
     highlights: [
-      'Created dynamic, high-traffic React.js webpages for major campaigns — handling thousands of concurrent users with zero downtime.',
-      'Built and implemented APIs for user registration that seamlessly integrated with CRM systems.',
-      'Developed an internal tool to rapidly generate personalized web pages, speeding up the team\'s entire content workflow.',
+      'Engineered high-traffic React.js campaign pages handling 100K+ concurrent users with zero downtime — optimized for performance at scale.',
+      'Designed and shipped RESTful user registration APIs integrated with CRM pipelines, powering seamless onboarding for millions of users.',
+      'Built an internal page generation platform that cut content team delivery time from days to minutes — adopted across the organization.',
     ],
   },
   {
@@ -87,8 +84,8 @@ export const experience = [
     color: '#E8B4A0',
     icon: '💡',
     highlights: [
-      'Built user-friendly front-end interfaces for multiple internal company applications.',
-      'Designed and developed a full intern onboarding web app — end-to-end internship management from application to offboarding.',
+      'Developed polished frontend interfaces for multiple internal finance-tech applications used across the organization.',
+      'Architected and launched a full-stack intern onboarding platform managing the end-to-end lifecycle — from application through offboarding — adopted as the company\'s standard onboarding process.',
     ],
   },
 ]
@@ -99,8 +96,8 @@ export const projects = [
     name: 'Lease Abstractor',
     tagline: 'AI that reads leases so you don\'t have to',
     description:
-      'Built an agentic AI tool powered by Google Gemini that automatically extracts and structures critical data from dense commercial lease documents — rent schedules, termination clauses, renewal options, and more. Turns hours of manual review into seconds. Directly used in production at Octave Holdings.',
-    tech: ['TypeScript', 'Google Gemini API', 'Node.js'],
+      'Production AI system powered by Google Gemini with two core capabilities: (1) automated structured extraction of rent schedules, termination clauses, renewal options, and CAM charges from complex commercial leases — turning hours of attorney review into seconds; (2) a RAG pipeline with conversational chat, so analysts can upload lease files and ask natural-language questions, getting cited answers directly from source documents. Used daily in production at Octave Holdings.',
+    tech: ['TypeScript', 'Google Gemini API', 'Node.js', 'RAG', 'Vector Search'],
     github: 'https://github.com/shreyas-peddi/Lease-abstractor',
     color: '#5C7A5C',
     icon: '🏠',

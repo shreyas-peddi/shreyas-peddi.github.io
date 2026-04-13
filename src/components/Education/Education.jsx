@@ -1,326 +1,239 @@
-import { motion } from 'framer-motion'
 import styled from 'styled-components'
-import { theme } from '../../styles/theme'
-import { education, publication, languages } from '../../data/resumeData'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
-import { GraduationCap, MapPin, BookOpen, ChatTeardrop } from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { education, certifications, languages, publication } from '../../data/resumeData'
 
-const EduSection = styled.section`
-  padding: 100px 24px;
-  background: ${theme.colors.cream};
-  position: relative;
-  overflow: hidden;
-`
-
-const Container = styled.div`
-  max-width: 900px;
+const Section = styled.section`
+  padding: 100px clamp(24px, 6vw, 80px);
+  max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
 `
 
-const SectionLabel = styled(motion.span)`
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: ${theme.colors.terracotta};
+const SectionHead = styled.div`
+  margin-bottom: 48px;
 `
 
-const SectionTitle = styled(motion.h2)`
-  font-family: ${theme.fonts.display};
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: ${theme.colors.charcoal};
-  margin-top: 8px;
-  margin-bottom: 50px;
-  text-shadow: 3px 3px 0 ${theme.colors.sageLight};
-`
+const Cmd = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSec};
+  margin-bottom: 12px;
 
-const CardsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 28px;
-  margin-bottom: 60px;
-`
-
-const EduCard = styled(motion.div)`
-  background: ${theme.colors.cream};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: ${theme.borderRadius.card};
-  overflow: hidden;
-  box-shadow: ${theme.shadows.card};
-`
-
-const EduCardTop = styled.div`
-  background: ${props => props.$color};
-  padding: 24px 28px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-`
-
-const IconCircle = styled.div`
-  width: 48px;
-  height: 48px;
-  background: rgba(251, 245, 230, 0.2);
-  border: 2px solid rgba(251, 245, 230, 0.5);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-`
-
-const SchoolName = styled.h3`
-  font-family: ${theme.fonts.display};
-  font-size: 1.15rem;
-  color: ${theme.colors.cream};
-  text-shadow: 1px 1px 0 rgba(61, 46, 30, 0.3);
-`
-
-const Degree = styled.p`
-  font-family: ${theme.fonts.body};
-  font-size: 0.8rem;
-  color: rgba(251, 245, 230, 0.85);
-  font-weight: 600;
-`
-
-const EduCardBody = styled.div`
-  padding: 20px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`
-
-const MetaRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const MetaItem = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: ${theme.fonts.body};
-  font-size: 0.8rem;
-  color: ${theme.colors.charcoalLight};
-  font-weight: 600;
-`
-
-const GpaStamp = styled(motion.div)`
-  background: ${props => props.$color};
-  color: ${theme.colors.cream};
-  font-family: ${theme.fonts.display};
-  font-size: 1rem;
-  padding: 6px 16px;
-  border-radius: 20px;
-  border: 2px solid ${theme.colors.charcoal};
-  box-shadow: 2px 2px 0 ${theme.colors.charcoal};
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 4px;
-`
-
-// Publication
-const PubCard = styled(motion.div)`
-  background: ${theme.colors.cream2};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: ${theme.borderRadius.card};
-  padding: 32px 36px;
-  box-shadow: ${theme.shadows.card};
-  position: relative;
-
-  &::before {
-    content: '📜';
-    position: absolute;
-    top: -16px;
-    left: 28px;
-    font-size: 2rem;
+  span {
+    color: ${({ theme }) => theme.green};
   }
 `
 
-const PubSubTitle = styled(motion.h3)`
-  font-family: ${theme.fonts.display};
-  font-size: 1.2rem;
-  color: ${theme.colors.charcoal};
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+const Rule = styled.div`
+  height: 1px;
+  background: ${({ theme }) => theme.border};
 `
 
-const PubTitle = styled.p`
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 1rem;
-  color: ${theme.colors.charcoal};
-  line-height: 1.5;
+const Blocks = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+`
+
+const Block = styled(motion.div)``
+
+const BlockLabel = styled.p`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSec};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   margin-bottom: 10px;
 `
 
-const PubMeta = styled.p`
-  font-family: ${theme.fonts.body};
-  font-size: 0.85rem;
-  color: ${theme.colors.charcoalLight};
-  line-height: 1.6;
+const EduCard = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 18px 22px;
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+  margin-bottom: 2px;
+  gap: 16px;
+  flex-wrap: wrap;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.borderMid};
+  }
 `
 
-// Languages
-const LangGrid = styled.div`
+const EduSchool = styled.p`
+  font-size: 14px;
+  color: ${({ theme }) => theme.textBright};
+  margin-bottom: 5px;
+`
+
+const EduDegree = styled.p`
+  font-size: 12px;
+  color: ${({ $color }) => $color};
+`
+
+const EduRight = styled.div`
+  text-align: right;
+  flex-shrink: 0;
+`
+
+const EduPeriod = styled.p`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSec};
+  margin-bottom: 4px;
+`
+
+const EduGpa = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.green};
+`
+
+const PubCard = styled.div`
+  padding: 20px 22px;
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+  border-left: 2px solid ${({ theme }) => theme.green};
+`
+
+const PubTitle = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textBright};
+  margin-bottom: 10px;
+  line-height: 1.55;
+`
+
+const PubMeta = styled.p`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSec};
+  line-height: 1.7;
+`
+
+const CertGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px;
+`
+
+const CertCard = styled.div`
+  padding: 13px 16px;
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+
+  p:first-child {
+    font-size: 12px;
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 3px;
+  }
+
+  p:last-child {
+    font-size: 11px;
+    color: ${({ theme }) => theme.textSec};
+  }
+`
+
+const LangRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 20px;
-  margin-bottom: 50px;
+  gap: 2px;
 `
 
-const LangChip = styled(motion.div)`
-  background: ${theme.colors.cream};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: 16px;
-  padding: 12px 20px;
-  box-shadow: ${theme.shadows.card};
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 180px;
+const LangCard = styled.div`
+  padding: 11px 16px;
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+
+  p:first-child {
+    font-size: 12px;
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 3px;
+  }
+
+  p:last-child {
+    font-size: 11px;
+    color: ${({ theme }) => theme.textSec};
+  }
 `
-
-const LangFlag = styled.span`
-  font-size: 1.6rem;
-`
-
-const LangInfo = styled.div``
-
-const LangName = styled.div`
-  font-family: ${theme.fonts.display};
-  font-size: 1rem;
-  color: ${theme.colors.charcoal};
-`
-
-const LangLevel = styled.div`
-  font-family: ${theme.fonts.body};
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: ${theme.colors.charcoalLight};
-  margin-top: 2px;
-`
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.15, type: 'spring', damping: 18 },
-  }),
-}
 
 export default function Education() {
-  const { ref, inView } = useScrollReveal()
+  const [ref, inView] = useInView({ threshold: 0.05, triggerOnce: true })
 
   return (
-    <EduSection id="education">
-      <Container>
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ type: 'spring', damping: 18 }}
-        >
-          <SectionLabel>Where I learned</SectionLabel>
-          <SectionTitle>Education</SectionTitle>
-        </motion.div>
+    <Section id="education" ref={ref}>
+      <SectionHead>
+        <Cmd><span>$</span> education --show</Cmd>
+        <Rule />
+      </SectionHead>
 
-        <CardsGrid>
+      <Blocks>
+        <Block
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4 }}
+        >
+          <BlockLabel>degrees</BlockLabel>
           {education.map((edu, i) => (
-            <EduCard
-              key={edu.school}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover={{ y: -6, boxShadow: theme.shadows.cardHover }}
-              transition={{ type: 'spring', damping: 15 }}
-            >
-              <EduCardTop $color={edu.color}>
-                <IconCircle>
-                  <GraduationCap size={24} color={theme.colors.cream} weight="bold" />
-                </IconCircle>
-                <div>
-                  <SchoolName>{edu.school}</SchoolName>
-                  <Degree>{edu.degree}</Degree>
-                </div>
-              </EduCardTop>
-              <EduCardBody>
-                <MetaItem><MapPin size={12} weight="bold" />{edu.location}</MetaItem>
-                <MetaItem>{edu.period}</MetaItem>
-                <GpaStamp
-                  $color={edu.color}
-                  initial={{ rotate: -5, scale: 0 }}
-                  whileInView={{ rotate: -2, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.15, type: 'spring', damping: 10 }}
-                >
-                  🎓 GPA: {edu.gpa}
-                </GpaStamp>
-              </EduCardBody>
+            <EduCard key={i}>
+              <div>
+                <EduSchool>{edu.school}</EduSchool>
+                <EduDegree $color={edu.color}>{edu.degree}</EduDegree>
+              </div>
+              <EduRight>
+                <EduPeriod>{edu.period} · {edu.location}</EduPeriod>
+                <EduGpa>GPA {edu.gpa}</EduGpa>
+              </EduRight>
             </EduCard>
           ))}
-        </CardsGrid>
+        </Block>
 
-        {/* Languages */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', damping: 18, delay: 0.1 }}
+        <Block
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <SectionLabel style={{ marginTop: 60, display: 'block' }}>How I communicate</SectionLabel>
-          <SectionTitle style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', marginBottom: 0 }}>
-            Languages
-          </SectionTitle>
-          <LangGrid>
-            {languages.map((l, i) => (
-              <LangChip
-                key={l.lang}
-                initial={{ opacity: 0, y: 20, rotate: -3 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, type: 'spring', damping: 14 }}
-                whileHover={{ y: -4, rotate: 2, boxShadow: theme.shadows.cardHover }}
-              >
-                <LangFlag>{l.flag}</LangFlag>
-                <LangInfo>
-                  <LangName>{l.lang}</LangName>
-                  <LangLevel>{l.level}</LangLevel>
-                </LangInfo>
-              </LangChip>
+          <BlockLabel>publication</BlockLabel>
+          <PubCard>
+            <PubTitle>{publication.title}</PubTitle>
+            <PubMeta>
+              {publication.authors}<br />
+              {publication.venue} · {publication.publisher} · {publication.pages} · {publication.year}
+            </PubMeta>
+          </PubCard>
+        </Block>
+
+        <Block
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: 0.15 }}
+        >
+          <BlockLabel>certifications</BlockLabel>
+          <CertGrid>
+            {certifications.map((cert, i) => (
+              <CertCard key={i}>
+                <p>{cert.name}</p>
+                <p>{cert.issuer}</p>
+              </CertCard>
             ))}
-          </LangGrid>
-        </motion.div>
+          </CertGrid>
+        </Block>
 
-        {/* Publication */}
-        <PubCard
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', damping: 18, delay: 0.2 }}
-          whileHover={{ y: -4 }}
+        <Block
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <PubSubTitle>
-            <BookOpen size={22} weight="bold" color={theme.colors.terracotta} />
-            Publication
-          </PubSubTitle>
-          <PubTitle>"{publication.title}"</PubTitle>
-          <PubMeta>
-            {publication.authors} ({publication.year})<br />
-            <em>{publication.venue}</em>, {publication.pages}.<br />
-            {publication.publisher}
-          </PubMeta>
-        </PubCard>
-      </Container>
-    </EduSection>
+          <BlockLabel>languages</BlockLabel>
+          <LangRow>
+            {languages.map((lang, i) => (
+              <LangCard key={i}>
+                <p>{lang.flag} {lang.lang}</p>
+                <p>{lang.level}</p>
+              </LangCard>
+            ))}
+          </LangRow>
+        </Block>
+      </Blocks>
+    </Section>
   )
 }

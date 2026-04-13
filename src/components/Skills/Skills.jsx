@@ -1,228 +1,108 @@
-import { useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useSpring, animated } from '@react-spring/web'
-import ReactConfetti from 'react-confetti'
-import styled, { keyframes } from 'styled-components'
-import { theme } from '../../styles/theme'
-import { skills, skillColors } from '../../data/resumeData'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
+import styled from 'styled-components'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import { skills } from '../../data/resumeData'
 
-const float = keyframes`
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-`
-
-const SkillsSection = styled.section`
-  padding: 100px 24px;
-  background: linear-gradient(180deg, ${theme.colors.cream2} 0%, ${theme.colors.cream} 100%);
-  position: relative;
-  overflow: hidden;
-  min-height: 70vh;
-`
-
-const Container = styled.div`
-  max-width: 900px;
+const Section = styled.section`
+  padding: 100px clamp(24px, 6vw, 80px);
+  max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
 `
 
-const SectionLabel = styled(motion.span)`
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: ${theme.colors.terracotta};
+const SectionHead = styled.div`
+  margin-bottom: 48px;
 `
 
-const SectionTitle = styled(motion.h2)`
-  font-family: ${theme.fonts.display};
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: ${theme.colors.charcoal};
-  margin-top: 8px;
-  margin-bottom: 20px;
-  text-shadow: 3px 3px 0 ${theme.colors.sageLight};
-`
+const Cmd = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSec};
+  margin-bottom: 12px;
 
-const Hint = styled(motion.p)`
-  font-family: ${theme.fonts.body};
-  font-size: 0.85rem;
-  color: ${theme.colors.charcoalLight};
-  font-weight: 600;
-  margin-bottom: 50px;
-`
-
-const CategoryGroup = styled(motion.div)`
-  margin-bottom: 50px;
-`
-
-const CategoryLabel = styled.div`
-  font-family: ${theme.fonts.display};
-  font-size: 1.1rem;
-  color: ${props => props.$color};
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &::after {
-    content: '';
-    flex: 1;
-    height: 2px;
-    background: ${props => props.$color};
-    opacity: 0.3;
-    border-radius: 2px;
+  span {
+    color: ${({ theme }) => theme.green};
   }
 `
 
-const BubblesRow = styled.div`
+const Rule = styled.div`
+  height: 1px;
+  background: ${({ theme }) => theme.border};
+`
+
+const SkillRows = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
+
+const Row = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+`
+
+const RowLabel = styled.p`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSec};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-top: 5px;
+`
+
+const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 6px;
 `
 
-const BubbleWrapper = styled.div`
-  animation: ${float} ${props => props.$dur}s ease-in-out infinite;
-  animation-delay: ${props => props.$delay}s;
-`
+const Tag = styled.span`
+  font-size: 12px;
+  color: ${({ theme }) => theme.text};
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 5px 13px;
+  letter-spacing: 0.02em;
+  transition: all 0.18s;
 
-const SkillBubble = styled(animated.button)`
-  background: ${props => props.$bg};
-  color: ${theme.colors.cream};
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 10px 20px;
-  border-radius: 40px;
-  border: 2.5px solid ${theme.colors.charcoal};
-  box-shadow: 3px 3px 0 ${theme.colors.charcoal};
-  cursor: none;
-  outline: none;
-  position: relative;
-  overflow: visible;
-  transition: box-shadow 0.15s ease;
-
-  &:active {
-    box-shadow: 1px 1px 0 ${theme.colors.charcoal};
+  &:hover {
+    color: ${({ theme }) => theme.green};
+    border-color: ${({ theme }) => theme.greenDim};
+    background: ${({ theme }) => theme.bgHighlight};
   }
 `
-
-const PopEffect = styled(motion.div)`
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-`
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-}
-
-const groupVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', damping: 18 } },
-}
-
-function SkillBubbleItem({ skill, color, delay, dur }) {
-  const [confettiOrigin, setConfettiOrigin] = useState(null)
-  const [showConfetti, setShowConfetti] = useState(false)
-
-  const [springProps, api] = useSpring(() => ({
-    scale: 1,
-    config: { tension: 400, friction: 10 },
-  }))
-
-  const handleClick = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setConfettiOrigin({
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
-    })
-    setShowConfetti(true)
-    api.start({ scale: 1.25, config: { tension: 600 }, onRest: () => api.start({ scale: 1 }) })
-    setTimeout(() => setShowConfetti(false), 2200)
-  }, [api])
-
-  return (
-    <>
-      {showConfetti && confettiOrigin && (
-        <PopEffect>
-          <ReactConfetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            recycle={false}
-            numberOfPieces={60}
-            confettiSource={{ x: confettiOrigin.x, y: confettiOrigin.y, w: 0, h: 0 }}
-            colors={[color, theme.colors.gold, theme.colors.cream, theme.colors.terracotta]}
-            gravity={0.4}
-            style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}
-          />
-        </PopEffect>
-      )}
-      <BubbleWrapper $dur={dur} $delay={delay}>
-        <SkillBubble
-          $bg={color}
-          onClick={handleClick}
-          style={{ scale: springProps.scale }}
-        >
-          {skill}
-        </SkillBubble>
-      </BubbleWrapper>
-    </>
-  )
-}
 
 export default function Skills() {
-  const { ref, inView } = useScrollReveal()
-
-  const categoryEmojis = {
-    'Languages': '📝',
-    'Frameworks': '🚀',
-    'ML / DS': '🧠',
-    'Databases': '🗄️',
-  }
+  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true })
 
   return (
-    <SkillsSection id="skills">
-      {/* Background decoration */}
-      <motion.div
-        style={{ position: 'absolute', top: 40, right: 60, fontSize: '4rem', opacity: 0.08 }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-      >
-        ⚡
-      </motion.div>
+    <Section id="skills" ref={ref}>
+      <SectionHead>
+        <Cmd><span>$</span> skills --list</Cmd>
+        <Rule />
+      </SectionHead>
 
-      <Container>
-        <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-        >
-          <SectionLabel variants={groupVariants}>What I work with</SectionLabel>
-          <SectionTitle variants={groupVariants}>Skills</SectionTitle>
-          <Hint variants={groupVariants}>Pop a bubble to celebrate! 🎉</Hint>
-
-          {Object.entries(skills).map(([category, skillList]) => (
-            <CategoryGroup key={category} variants={groupVariants}>
-              <CategoryLabel $color={skillColors[category]}>
-                {categoryEmojis[category]} {category}
-              </CategoryLabel>
-              <BubblesRow>
-                {skillList.map((skill, i) => (
-                  <SkillBubbleItem
-                    key={skill}
-                    skill={skill}
-                    color={skillColors[category]}
-                    delay={i * 0.3}
-                    dur={3 + (i % 3) * 0.7}
-                  />
-                ))}
-              </BubblesRow>
-            </CategoryGroup>
-          ))}
-        </motion.div>
-      </Container>
-    </SkillsSection>
+      <SkillRows>
+        {Object.entries(skills).map(([category, items], i) => (
+          <Row
+            key={category}
+            initial={{ opacity: 0, x: -16 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.4, delay: i * 0.09 }}
+          >
+            <RowLabel>{category}</RowLabel>
+            <Tags>
+              {items.map(skill => (
+                <Tag key={skill}>{skill}</Tag>
+              ))}
+            </Tags>
+          </Row>
+        ))}
+      </SkillRows>
+    </Section>
   )
 }

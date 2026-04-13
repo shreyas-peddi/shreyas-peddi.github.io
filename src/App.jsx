@@ -5,7 +5,6 @@ import { theme } from './styles/theme'
 import { GlobalStyles } from './styles/GlobalStyles'
 import { useLenis } from './hooks/useLenis'
 
-import Cursor from './components/Cursor/Cursor'
 import Loader from './components/Loader/Loader'
 import Navbar from './components/Navbar/Navbar'
 import Hero from './components/Hero/Hero'
@@ -24,17 +23,16 @@ export default function App() {
   useLenis()
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2600)
+    const timer = setTimeout(() => setIsLoading(false), 2800)
     return () => clearTimeout(timer)
   }, [])
 
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <Cursor />
 
       <AnimatePresence>
-        {isLoading && <Loader isLoading={isLoading} />}
+        {isLoading && <Loader />}
       </AnimatePresence>
 
       {!isLoading && (

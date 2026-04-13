@@ -1,294 +1,183 @@
-import { useEffect, useRef } from 'react'
+import styled, { keyframes } from 'styled-components'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
-import styled, { keyframes } from 'styled-components'
-import { theme } from '../../styles/theme'
 import { personal } from '../../data/resumeData'
 
-const float = keyframes`
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-12px) rotate(2deg); }
-  66% { transform: translateY(-6px) rotate(-2deg); }
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 `
 
-const drift = keyframes`
-  0% { transform: translateX(0) translateY(0); opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { transform: translateX(20px) translateY(-30px); opacity: 0; }
-`
-
-const sway = keyframes`
-  0%, 100% { transform: rotate(-5deg); }
-  50% { transform: rotate(5deg); }
-`
-
-const HeroSection = styled.section`
+const Section = styled.section`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  padding: calc(${({ theme }) => theme.navHeight} + 80px) clamp(24px, 6vw, 80px) 80px;
+  max-width: ${({ theme }) => theme.maxWidth};
+  margin: 0 auto;
   position: relative;
-  overflow: hidden;
-  background: ${theme.colors.cream};
-  padding: 120px 24px 60px;
 `
 
-const Sky = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    #D4E8C2 0%,
-    #E8F4D8 40%,
-    ${theme.colors.cream} 100%
-  );
-`
+const Prompt = styled(motion.p)`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSec};
+  margin-bottom: 28px;
 
-const Cloud = styled(motion.div)`
-  position: absolute;
-  background: white;
-  border-radius: 50px;
-  opacity: 0.75;
-  border: 2px solid rgba(61, 46, 30, 0.1);
-
-  &::before, &::after {
-    content: '';
-    position: absolute;
-    background: white;
-    border-radius: 50%;
+  span {
+    color: ${({ theme }) => theme.green};
   }
-
-  &::before {
-    width: 60%;
-    height: 120%;
-    top: -40%;
-    left: 15%;
-  }
-
-  &::after {
-    width: 40%;
-    height: 100%;
-    top: -25%;
-    right: 15%;
-  }
-`
-
-const FloatingLeaf = styled(motion.div)`
-  position: absolute;
-  font-size: ${props => props.$size || '1.5rem'};
-  animation: ${float} ${props => props.$duration || '4s'} ease-in-out infinite;
-  animation-delay: ${props => props.$delay || '0s'};
-  filter: drop-shadow(2px 2px 0 rgba(61,46,30,0.2));
-`
-
-const SporeParticle = styled(motion.div)`
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: ${theme.colors.sageLight};
-  border-radius: 50%;
-  animation: ${drift} ${props => props.$dur || '3s'} ease-out infinite;
-  animation-delay: ${props => props.$delay || '0s'};
-`
-
-const NameWrapper = styled(motion.div)`
-  text-align: center;
-  position: relative;
-  z-index: 2;
 `
 
 const Name = styled(motion.h1)`
-  font-family: ${theme.fonts.display};
-  font-size: clamp(3rem, 9vw, 7rem);
-  color: ${theme.colors.charcoal};
-  line-height: 1;
-  text-shadow: 4px 4px 0 ${theme.colors.sageLight};
-  letter-spacing: -1px;
+  font-family: ${({ theme }) => theme.fontDisplay};
+  font-size: clamp(72px, 10vw, 130px);
+  font-weight: 400;
+  color: ${({ theme }) => theme.textBright};
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
 `
 
-const Subtitle = styled.div`
-  font-family: ${theme.fonts.body};
-  font-size: clamp(1rem, 2.5vw, 1.4rem);
-  font-weight: 700;
-  color: ${theme.colors.terracotta};
-  margin-top: 12px;
-  min-height: 2rem;
+const Divider = styled(motion.div)`
+  height: 1px;
+  background: ${({ theme }) => theme.borderMid};
+  margin: 24px 0;
+  max-width: 560px;
+  transform-origin: left;
 `
 
-const TagBadge = styled(motion.div)`
-  display: inline-block;
-  background: ${theme.colors.sage};
-  color: ${theme.colors.cream};
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  padding: 6px 16px;
-  border-radius: 30px;
-  border: 2px solid ${theme.colors.charcoal};
-  box-shadow: 2px 2px 0 ${theme.colors.charcoal};
-  margin-top: 16px;
-`
-
-const ScrollIndicator = styled(motion.div)`
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+const Tagline = styled.div`
+  font-size: 15px;
+  color: ${({ theme }) => theme.green};
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  min-height: 26px;
+
+  &::before {
+    content: '>';
+    color: ${({ theme }) => theme.textSec};
+  }
+`
+
+const Cursor = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: ${({ theme }) => theme.green};
+  animation: ${blink} 0.9s step-start infinite;
+  vertical-align: -3px;
+  margin-left: 2px;
+`
+
+const Meta = styled(motion.p)`
+  font-size: 12px;
+  color: ${({ theme }) => theme.textSec};
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 44px;
+`
+
+const Links = styled(motion.div)`
+  display: flex;
   gap: 6px;
-  font-family: ${theme.fonts.body};
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: ${theme.colors.charcoalLight};
-  z-index: 2;
+  flex-wrap: wrap;
+  align-items: center;
 `
 
-const GrassRow = styled.div`
+const LinkBtn = styled.a`
+  font-size: 12px;
+  color: ${({ theme }) => theme.textSec};
+  border: 1px solid ${({ theme }) => theme.border};
+  padding: 7px 16px;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+
+  &:hover {
+    color: ${({ theme }) => theme.green};
+    border-color: ${({ theme }) => theme.greenDim};
+    background: ${({ theme }) => theme.bgHighlight};
+  }
+`
+
+const ScrollHint = styled.p`
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  z-index: 1;
+  bottom: 36px;
+  left: clamp(24px, 6vw, 80px);
+  font-size: 11px;
+  color: ${({ theme }) => theme.textDim};
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 `
-
-const Tree = styled.div`
-  position: absolute;
-  bottom: 0;
-  ${props => props.$side === 'left' ? 'left: 40px' : 'right: 40px'};
-  z-index: 1;
-`
-
-const clouds = [
-  { top: '8%', left: '10%', width: 120, height: 40, speed: 18 },
-  { top: '15%', left: '55%', width: 90, height: 30, speed: 24 },
-  { top: '5%', left: '75%', width: 150, height: 50, speed: 30 },
-]
-
-const leaves = [
-  { top: '20%', left: '8%', emoji: '🍃', size: '2rem', dur: '5s', delay: '0s' },
-  { top: '35%', right: '6%', emoji: '🌿', size: '1.8rem', dur: '4.5s', delay: '1s' },
-  { top: '55%', left: '5%', emoji: '🍂', size: '1.5rem', dur: '6s', delay: '0.5s' },
-  { top: '25%', right: '12%', emoji: '🌾', size: '2.2rem', dur: '5.5s', delay: '2s' },
-  { top: '70%', left: '12%', emoji: '🍃', size: '1.3rem', dur: '4s', delay: '1.5s' },
-]
-
-const spores = Array.from({ length: 10 }, (_, i) => ({
-  left: `${10 + i * 8}%`,
-  bottom: `${20 + (i % 3) * 15}%`,
-  dur: `${2.5 + (i % 3) * 0.8}s`,
-  delay: `${i * 0.4}s`,
-}))
-
-const nameLetters = 'SHREYAS PEDDI'.split('')
 
 export default function Hero() {
-  const typeSequence = personal.taglines.flatMap(t => [t, 2000])
+  const typeSequence = personal.taglines.flatMap(t => [t, 1800])
 
   return (
-    <HeroSection id="hero">
-      <Sky />
-
-      {/* Clouds */}
-      {clouds.map((c, i) => (
-        <Cloud
-          key={i}
-          style={{ top: c.top, left: c.left, width: c.width, height: c.height }}
-          animate={{ x: [0, 30, 0] }}
-          transition={{ duration: c.speed, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
-
-      {/* Floating leaves */}
-      {leaves.map((l, i) => (
-        <FloatingLeaf
-          key={i}
-          $size={l.size}
-          $duration={l.dur}
-          $delay={l.delay}
-          style={{ top: l.top, left: l.left, right: l.right }}
-        >
-          {l.emoji}
-        </FloatingLeaf>
-      ))}
-
-      {/* Spore particles */}
-      {spores.map((s, i) => (
-        <SporeParticle
-          key={i}
-          $dur={s.dur}
-          $delay={s.delay}
-          style={{ left: s.left, bottom: s.bottom }}
-        />
-      ))}
-
-      {/* Main content */}
-      <NameWrapper
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-      >
-        <Name>
-          {nameLetters.map((letter, i) => (
-            <motion.span
-              key={i}
-              style={{ display: letter === ' ' ? 'inline' : 'inline-block' }}
-              initial={{ opacity: 0, y: 40, rotate: -8 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{
-                delay: 0.1 + i * 0.04,
-                type: 'spring',
-                damping: 14,
-                stiffness: 200,
-              }}
-            >
-              {letter === ' ' ? '\u00A0' : letter}
-            </motion.span>
-          ))}
-        </Name>
-
-        <Subtitle>
-          <TypeAnimation
-            sequence={typeSequence}
-            wrapper="span"
-            speed={50}
-            repeat={Infinity}
-            style={{ display: 'inline-block' }}
-          />
-        </Subtitle>
-
-        <div>
-          <TagBadge
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, type: 'spring', damping: 12 }}
-            whileHover={{ scale: 1.05, rotate: -2 }}
-          >
-            📍 Atlanta, GA
-          </TagBadge>
-        </div>
-      </NameWrapper>
-
-      {/* Grass */}
-      <GrassRow>
-        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-          <path d="M0,40 Q120,0 240,40 Q360,80 480,40 Q600,0 720,40 Q840,80 960,40 Q1080,0 1200,40 Q1320,80 1440,40 L1440,80 L0,80 Z"
-            fill="#A8C5A0" stroke="#3D2E1E" strokeWidth="2"/>
-        </svg>
-      </GrassRow>
-
-      <ScrollIndicator
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+    <Section id="home">
+      <Prompt
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
       >
-        <span>scroll</span>
-        <span style={{ fontSize: '1.2rem' }}>🌿</span>
-      </ScrollIndicator>
-    </HeroSection>
+        <span>$</span> ./hello.sh
+      </Prompt>
+
+      <Name
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        {personal.name.toUpperCase()}
+      </Name>
+
+      <Divider
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.7, delay: 0.3 }}
+      />
+
+      <Tagline>
+        <TypeAnimation
+          sequence={typeSequence}
+          wrapper="span"
+          speed={50}
+          deletionSpeed={70}
+          repeat={Infinity}
+        />
+        <Cursor />
+      </Tagline>
+
+      <Meta
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+      >
+        {personal.location} · CS Grad @ UGA · Open to new opportunities
+      </Meta>
+
+      <Links
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.6 }}
+      >
+        <LinkBtn href={personal.github} target="_blank" rel="noopener noreferrer">
+          github ↗
+        </LinkBtn>
+        <LinkBtn href={personal.linkedin} target="_blank" rel="noopener noreferrer">
+          linkedin ↗
+        </LinkBtn>
+        <LinkBtn href={`mailto:${personal.email}`}>
+          email ↗
+        </LinkBtn>
+        <LinkBtn href={personal.resumePdf} target="_blank" rel="noopener noreferrer">
+          resume.pdf ↓
+        </LinkBtn>
+      </Links>
+
+      <ScrollHint>scroll ↓</ScrollHint>
+    </Section>
   )
 }

@@ -1,57 +1,63 @@
 import { createGlobalStyle } from 'styled-components'
-import { theme } from './theme'
 
 export const GlobalStyles = createGlobalStyle`
   *, *::before, *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
   }
 
   html {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-behavior: auto; /* Lenis handles this */
-  }
-
-  html::-webkit-scrollbar {
-    display: none;
+    scroll-behavior: smooth;
   }
 
   body {
-    background-color: ${theme.colors.cream};
-    color: ${theme.colors.charcoal};
-    font-family: ${theme.fonts.body};
-    line-height: 1.6;
+    background: ${({ theme }) => theme.bg};
+    color: ${({ theme }) => theme.text};
+    font-family: ${({ theme }) => theme.fontMono};
+    font-size: 14px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
 
-  @media (pointer: fine) {
-    body { cursor: none; }
-    a, button { cursor: none; }
+  /* Subtle CRT scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.025) 3px,
+      rgba(0, 0, 0, 0.025) 4px
+    );
   }
 
-  h1, h2, h3, h4 {
-    font-family: ${theme.fonts.display};
-    line-height: 1.2;
+  ::-webkit-scrollbar {
+    width: 4px;
   }
-
-  a {
-    text-decoration: none;
-    color: inherit;
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.bg};
   }
-
-  img {
-    max-width: 100%;
-    display: block;
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.greenDim};
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.green};
   }
 
   ::selection {
-    background: ${theme.colors.gold};
-    color: ${theme.colors.charcoal};
+    background: ${({ theme }) => theme.greenDim};
+    color: ${({ theme }) => theme.greenBright};
   }
 
-  section {
-    position: relative;
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `

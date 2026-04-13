@@ -1,335 +1,168 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import styled from 'styled-components'
-import { theme } from '../../styles/theme'
+import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 import { experience } from '../../data/resumeData'
-import { useScrollReveal } from '../../hooks/useScrollReveal'
-import { MapPin, Calendar } from '@phosphor-icons/react'
 
-const ExperienceSection = styled.section`
-  padding: 100px 24px 120px;
-  background: ${theme.colors.cream};
-  position: relative;
-  overflow: hidden;
-`
-
-const Container = styled.div`
-  max-width: 900px;
+const Section = styled.section`
+  padding: 100px clamp(24px, 6vw, 80px);
+  max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
 `
 
-const SectionLabel = styled(motion.span)`
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: ${theme.colors.terracotta};
+const SectionHead = styled.div`
+  margin-bottom: 48px;
 `
 
-const SectionTitle = styled(motion.h2)`
-  font-family: ${theme.fonts.display};
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  color: ${theme.colors.charcoal};
-  margin-top: 8px;
-  margin-bottom: 60px;
-  text-shadow: 3px 3px 0 ${theme.colors.sageLight};
-`
+const Cmd = styled.p`
+  font-size: 13px;
+  color: ${({ theme }) => theme.textSec};
+  margin-bottom: 12px;
 
-const RoadWrapper = styled.div`
-  position: relative;
-  padding-left: 60px;
-`
-
-const RoadSvgWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 50px;
-`
-
-const RoadPath = styled(motion.div)`
-  position: absolute;
-  left: 20px;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  background: ${theme.colors.cream2};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: 10px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: repeating-linear-gradient(
-      to bottom,
-      ${theme.colors.gold} 0px,
-      ${theme.colors.gold} 10px,
-      transparent 10px,
-      transparent 20px
-    );
+  span {
+    color: ${({ theme }) => theme.green};
   }
 `
 
-const Milestone = styled(motion.div)`
-  position: absolute;
-  left: 10px;
-  width: 30px;
-  height: 30px;
-  background: ${props => props.$color};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: 50%;
-  box-shadow: 2px 2px 0 ${theme.colors.charcoal};
+const Rule = styled.div`
+  height: 1px;
+  background: ${({ theme }) => theme.border};
+`
+
+const Stack = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9rem;
-  z-index: 2;
+  flex-direction: column;
+  gap: 2px;
 `
 
-const MilestoneLabel = styled.span`
-  position: absolute;
-  left: 46px;
-  top: 4px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  font-family: ${theme.fonts.body};
-  white-space: nowrap;
-  color: ${theme.colors.charcoalLight};
-`
+const JobCard = styled(motion.div)`
+  background: ${({ theme }) => theme.bgCard};
+  border: 1px solid ${({ theme }) => theme.border};
+  overflow: hidden;
+  transition: border-color 0.2s;
 
-const ExperienceCard = styled(motion.div)`
-  background: ${theme.colors.cream};
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: ${theme.borderRadius.card};
-  padding: 28px 32px;
-  margin-bottom: 40px;
-  box-shadow: ${theme.shadows.card};
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 20px;
-    width: 20px;
-    height: 2.5px;
-    background: ${theme.colors.charcoal};
+  &:hover {
+    border-color: ${({ theme }) => theme.borderMid};
   }
 `
 
-const CardAccent = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: ${props => props.$color};
-  border-radius: 16px 16px 0 0;
-`
-
-const CompanyRow = styled.div`
+const JobTop = styled.div`
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 6px;
-`
-
-const CompanyName = styled.h3`
-  font-family: ${theme.fonts.display};
-  font-size: 1.3rem;
-  color: ${theme.colors.charcoal};
-`
-
-const BadgeRow = styled.div`
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
-`
-
-const RoleBadge = styled.span`
-  background: ${props => props.$color};
-  color: ${theme.colors.cream};
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.75rem;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 2px solid ${theme.colors.charcoal};
-`
-
-const PromoBadge = styled(motion.span)`
-  background: ${theme.colors.gold};
-  color: ${theme.colors.charcoal};
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.7rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 2px solid ${theme.colors.charcoal};
-`
-
-const MetaRow = styled.div`
-  display: flex;
+  align-items: flex-start;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid ${({ theme }) => theme.border};
   gap: 16px;
-  align-items: center;
-  margin-bottom: 16px;
   flex-wrap: wrap;
 `
 
-const MetaItem = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: ${theme.fonts.body};
-  font-size: 0.8rem;
-  color: ${theme.colors.charcoalLight};
-  font-weight: 600;
+const JobLeft = styled.div``
+
+const Role = styled.p`
+  font-size: 14px;
+  color: ${({ theme }) => theme.textBright};
+  margin-bottom: 4px;
+  font-weight: 500;
 `
 
-const BulletList = styled.ul`
+const Company = styled.p`
+  font-size: 13px;
+  color: ${({ $color }) => $color};
+
+  span {
+    opacity: 0.6;
+    font-size: 12px;
+  }
+`
+
+const JobRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+`
+
+const Badge = styled.span`
+  font-size: 10px;
+  color: ${({ theme }) => theme.green};
+  border: 1px solid ${({ theme }) => theme.greenDim};
+  padding: 2px 8px;
+  letter-spacing: 0.06em;
+`
+
+const Period = styled.span`
+  font-size: 11px;
+  color: ${({ theme }) => theme.textSec};
+  letter-spacing: 0.04em;
+`
+
+const Highlights = styled.ul`
   list-style: none;
+  padding: 16px 24px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 `
 
-const Bullet = styled(motion.li)`
-  font-family: ${theme.fonts.body};
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: ${theme.colors.charcoal};
-  padding-left: 20px;
+const Highlight = styled.li`
+  font-size: 13px;
+  color: ${({ theme }) => theme.text};
+  line-height: 1.75;
+  padding-left: 18px;
   position: relative;
 
   &::before {
-    content: '🌿';
+    content: '›';
     position: absolute;
     left: 0;
-    top: 2px;
-    font-size: 0.75rem;
+    color: ${({ theme }) => theme.textSec};
+    font-size: 16px;
+    line-height: 1.5;
   }
 `
 
-const cardVariants = {
-  hidden: { opacity: 0, x: -40 },
-  visible: (i) => ({
-    opacity: 1,
-    x: 0,
-    transition: { delay: i * 0.15, type: 'spring', damping: 18 },
-  }),
-}
-
-function ExperienceItem({ job, index, roadRef }) {
-  const { ref, inView } = useScrollReveal({ threshold: 0.2 })
-
-  return (
-    <div ref={ref} style={{ position: 'relative', marginBottom: 40 }}>
-      <ExperienceCard
-        custom={index}
-        variants={cardVariants}
-        initial="hidden"
-        animate={inView ? 'visible' : 'hidden'}
-        whileHover={{ y: -4, boxShadow: theme.shadows.cardHover }}
-        transition={{ type: 'spring', damping: 15 }}
-      >
-        <CardAccent $color={job.color} />
-        <CompanyRow>
-          <CompanyName>{job.icon} {job.company}</CompanyName>
-          <BadgeRow>
-            {job.badge && (
-              <PromoBadge
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', damping: 10, delay: 0.3 }}
-              >
-                {job.badge}
-              </PromoBadge>
-            )}
-            <RoleBadge $color={job.color}>{job.role}</RoleBadge>
-          </BadgeRow>
-        </CompanyRow>
-        <MetaRow>
-          <MetaItem><Calendar size={12} weight="bold" />{job.period}</MetaItem>
-          <MetaItem><MapPin size={12} weight="bold" />{job.location}</MetaItem>
-        </MetaRow>
-        <BulletList>
-          {job.highlights.map((h, i) => (
-            <Bullet
-              key={i}
-              initial={{ opacity: 0, x: -10 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.3 + i * 0.1 }}
-            >
-              {h}
-            </Bullet>
-          ))}
-        </BulletList>
-      </ExperienceCard>
-    </div>
-  )
-}
-
 export default function Experience() {
-  const { ref: titleRef, inView: titleInView } = useScrollReveal()
-  const roadRef = useRef(null)
-  const milestonePositions = [0, 25, 50, 75]
+  const [ref, inView] = useInView({ threshold: 0.05, triggerOnce: true })
 
   return (
-    <ExperienceSection id="experience">
-      <Container>
-        <motion.div
-          ref={titleRef}
-          initial={{ opacity: 0, y: 30 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ type: 'spring', damping: 18 }}
-        >
-          <SectionLabel>Where I've been</SectionLabel>
-          <SectionTitle>Experience</SectionTitle>
-        </motion.div>
+    <Section id="experience" ref={ref}>
+      <SectionHead>
+        <Cmd><span>$</span> git log --work</Cmd>
+        <Rule />
+      </SectionHead>
 
-        <RoadWrapper>
-          <RoadSvgWrapper>
-            <RoadPath />
-            {experience.map((job, i) => (
-              <div key={job.id} style={{ position: 'absolute', top: `${i * 25 + 5}%` }}>
-                <Milestone
-                  $color={job.color}
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15, type: 'spring', damping: 10 }}
-                  whileHover={{ scale: 1.3 }}
-                >
-                  {job.icon}
-                </Milestone>
-              </div>
-            ))}
-          </RoadSvgWrapper>
+      <Stack>
+        {experience.map((job, i) => (
+          <JobCard
+            key={job.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.4, delay: i * 0.07 }}
+          >
+            <JobTop>
+              <JobLeft>
+                <Role>{job.role}</Role>
+                <Company $color={job.color}>
+                  {job.company}
+                  <span> · {job.location}</span>
+                </Company>
+              </JobLeft>
+              <JobRight>
+                {job.badge && (
+                  <Badge>{job.badge.replace('🌟 ', '')}</Badge>
+                )}
+                <Period>{job.period}</Period>
+              </JobRight>
+            </JobTop>
 
-          {experience.map((job, i) => (
-            <ExperienceItem key={job.id} job={job} index={i} />
-          ))}
-        </RoadWrapper>
-      </Container>
-
-      {/* Decorations */}
-      <motion.div
-        style={{ position: 'absolute', bottom: 20, right: 30, fontSize: '2.5rem', opacity: 0.3 }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-      >
-        ⚙️
-      </motion.div>
-    </ExperienceSection>
+            <Highlights>
+              {job.highlights.map((h, j) => (
+                <Highlight key={j}>{h}</Highlight>
+              ))}
+            </Highlights>
+          </JobCard>
+        ))}
+      </Stack>
+    </Section>
   )
 }

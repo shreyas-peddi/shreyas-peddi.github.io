@@ -1,119 +1,131 @@
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { Link } from 'react-scroll'
 import styled from 'styled-components'
-import { theme } from '../../styles/theme'
-import { GithubLogo, LinkedinLogo, House, Briefcase, Lightning, FolderOpen, GraduationCap, DownloadSimple } from '@phosphor-icons/react'
+import { Link } from 'react-scroll'
+import { personal } from '../../data/resumeData'
 
-const NavBar = styled(motion.nav)`
+const Nav = styled.nav`
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: ${({ theme }) => theme.navHeight};
+  background: ${({ theme }) => theme.bg};
+  border-bottom: 1px solid ${({ $scrolled, theme }) => $scrolled ? theme.border : 'transparent'};
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(251, 245, 230, 0.85);
-  backdrop-filter: blur(12px);
-  border: 2.5px solid ${theme.colors.charcoal};
-  border-radius: ${theme.borderRadius.pill};
-  padding: 10px 20px;
-  box-shadow: 4px 4px 0px ${theme.colors.charcoal};
+  justify-content: space-between;
+  padding: 0 clamp(20px, 5vw, 60px);
+  transition: border-color 0.3s;
 `
 
-const NavLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: ${theme.colors.charcoal};
-  padding: 6px 12px;
-  border-radius: 30px;
-  cursor: none;
-  transition: background 0.2s ease, color 0.2s ease;
+const Brand = styled.div`
+  font-family: ${({ theme }) => theme.fontMono};
+  font-size: 13px;
+  color: ${({ theme }) => theme.green};
+  cursor: pointer;
   white-space: nowrap;
+  user-select: none;
 
-  &:hover, &.active {
-    background: ${theme.colors.sage};
-    color: ${theme.colors.cream};
+  span {
+    color: ${({ theme }) => theme.textSec};
   }
 `
 
-const Divider = styled.div`
-  width: 2px;
-  height: 20px;
-  background: ${theme.colors.charcoal};
-  opacity: 0.2;
-  border-radius: 2px;
-`
-
-const DownloadBtn = styled(motion.a)`
+const NavLinks = styled.div`
   display: flex;
+  gap: 24px;
   align-items: center;
-  gap: 5px;
-  font-family: ${theme.fonts.body};
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: ${theme.colors.cream};
-  background: ${theme.colors.terracotta};
-  padding: 6px 14px;
-  border-radius: 30px;
-  border: 2px solid ${theme.colors.charcoal};
-  cursor: none;
-  white-space: nowrap;
+
+  @media (max-width: 640px) {
+    gap: 14px;
+  }
 `
 
-const navItems = [
-  { label: 'Home', to: 'hero', icon: <House size={14} weight="bold" /> },
-  { label: 'About', to: 'about', icon: null },
-  { label: 'Experience', to: 'experience', icon: <Briefcase size={14} weight="bold" /> },
-  { label: 'Skills', to: 'skills', icon: <Lightning size={14} weight="bold" /> },
-  { label: 'Projects', to: 'projects', icon: <FolderOpen size={14} weight="bold" /> },
-  { label: 'Education', to: 'education', icon: <GraduationCap size={14} weight="bold" /> },
+const NavLink = styled(Link)`
+  font-family: ${({ theme }) => theme.fontMono};
+  font-size: 12px;
+  color: ${({ theme }) => theme.textSec};
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+
+  &:hover {
+    color: ${({ theme }) => theme.text};
+  }
+
+  &.active {
+    color: ${({ theme }) => theme.green};
+  }
+
+  @media (max-width: 480px) {
+    display: none;
+
+    &:last-of-type {
+      display: block;
+    }
+  }
+`
+
+const ResumeBtn = styled.a`
+  font-family: ${({ theme }) => theme.fontMono};
+  font-size: 12px;
+  color: ${({ theme }) => theme.green};
+  border: 1px solid ${({ theme }) => theme.greenDim};
+  padding: 4px 12px;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: ${({ theme }) => theme.greenDim};
+    color: ${({ theme }) => theme.greenBright};
+  }
+`
+
+const NAV_ITEMS = [
+  { label: 'about', to: 'about' },
+  { label: 'experience', to: 'experience' },
+  { label: 'projects', to: 'projects' },
+  { label: 'education', to: 'education' },
+  { label: 'contact', to: 'contact' },
 ]
 
 export default function Navbar({ resumePdf }) {
-  const [visible, setVisible] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 400)
-    return () => clearTimeout(timer)
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <NavBar
-      initial={{ y: -100, opacity: 0 }}
-      animate={visible ? { y: 0, opacity: 1 } : {}}
-      transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-    >
-      {navItems.map((item, i) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          smooth={true}
-          duration={800}
-          spy={true}
-          activeClass="active"
-          offset={-80}
-        >
-          {item.icon}
-          {item.label}
-        </NavLink>
-      ))}
-      <Divider />
-      <DownloadBtn
-        href={resumePdf}
-        download="Shreyas_Peddi_Resume.pdf"
-        whileHover={{ scale: 1.05, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', damping: 15 }}
-      >
-        <DownloadSimple size={14} weight="bold" />
-        Resume
-      </DownloadBtn>
-    </NavBar>
+    <Nav $scrolled={scrolled}>
+      <Link to="home" smooth duration={600}>
+        <Brand>
+          <span>shreyas@portfolio</span>:~$
+        </Brand>
+      </Link>
+
+      <NavLinks>
+        {NAV_ITEMS.map(({ label, to }) => (
+          <NavLink
+            key={to}
+            to={to}
+            spy
+            smooth
+            duration={600}
+            offset={-52}
+            activeClass="active"
+          >
+            {label}
+          </NavLink>
+        ))}
+        <ResumeBtn href={resumePdf} target="_blank" rel="noopener noreferrer">
+          resume ↗
+        </ResumeBtn>
+      </NavLinks>
+    </Nav>
   )
 }
