@@ -14,8 +14,8 @@ export const theme = {
 
   text: '#C8C8C8',
   textBright: '#E8E8E8',
-  textSec: '#5A5A5A',
-  textDim: '#2E2E2E',
+  textSec: '#808080',
+  textDim: '#505050',
 
   border: '#1A1A1A',
   borderMid: '#252525',

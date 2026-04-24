@@ -2,10 +2,16 @@ import styled, { keyframes } from 'styled-components'
 import { motion } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
 import { personal } from '../../data/resumeData'
+import ASCIIText from '../ASCIIText/ASCIIText'
 
 const blink = keyframes`
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+`
+
+const scrollFloat = keyframes`
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(5px); }
 `
 
 const Section = styled.section`
@@ -13,7 +19,7 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: calc(${({ theme }) => theme.navHeight} + 80px) clamp(24px, 6vw, 80px) 80px;
+  padding: calc(${({ theme }) => theme.navHeight} + 60px) clamp(24px, 6vw, 80px) 80px;
   max-width: ${({ theme }) => theme.maxWidth};
   margin: 0 auto;
   position: relative;
@@ -22,27 +28,25 @@ const Section = styled.section`
 const Prompt = styled(motion.p)`
   font-size: 13px;
   color: ${({ theme }) => theme.textSec};
-  margin-bottom: 28px;
+  margin-bottom: 16px;
 
   span {
     color: ${({ theme }) => theme.green};
   }
 `
 
-const Name = styled(motion.h1)`
-  font-family: ${({ theme }) => theme.fontDisplay};
-  font-size: clamp(72px, 10vw, 130px);
-  font-weight: 400;
-  color: ${({ theme }) => theme.textBright};
-  line-height: 0.95;
-  letter-spacing: 0.02em;
-  margin-bottom: 12px;
+const NameCanvas = styled(motion.div)`
+  position: relative;
+  width: 100%;
+  height: clamp(200px, 26vw, 280px);
+  overflow: hidden;
+  margin-bottom: 0;
 `
 
 const Divider = styled(motion.div)`
   height: 1px;
   background: ${({ theme }) => theme.borderMid};
-  margin: 24px 0;
+  margin: 20px 0;
   max-width: 560px;
   transform-origin: left;
 `
@@ -53,7 +57,7 @@ const Tagline = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   min-height: 26px;
 
   &::before {
@@ -77,7 +81,7 @@ const Meta = styled(motion.p)`
   color: ${({ theme }) => theme.textSec};
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 44px;
+  margin-bottom: 36px;
 `
 
 const Links = styled(motion.div)`
@@ -102,14 +106,36 @@ const LinkBtn = styled.a`
   }
 `
 
-const ScrollHint = styled.p`
+const ScrollHint = styled.div`
   position: absolute;
-  bottom: 36px;
-  left: clamp(24px, 6vw, 80px);
-  font-size: 11px;
-  color: ${({ theme }) => theme.textDim};
-  letter-spacing: 0.12em;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: ${scrollFloat} 2.4s ease-in-out infinite;
+  cursor: default;
+  user-select: none;
+`
+
+const ScrollLabel = styled.span`
+  font-size: 13px;
+  color: ${({ theme }) => theme.green};
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+`
+
+const ScrollChevrons = styled.span`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: ${({ theme }) => theme.green};
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.8;
 `
 
 export default function Hero() {
@@ -125,13 +151,20 @@ export default function Hero() {
         <span>$</span> ./hello.sh
       </Prompt>
 
-      <Name
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+      <NameCanvas
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.1 }}
       >
-        {personal.name.toUpperCase()}
-      </Name>
+        <ASCIIText
+          text={personal.name.split(' ')[0].toUpperCase()}
+          asciiFontSize={8}
+          textFontSize={200}
+          textColor="#E8E8E8"
+          planeBaseHeight={16}
+          enableWaves={true}
+        />
+      </NameCanvas>
 
       <Divider
         initial={{ scaleX: 0 }}
@@ -177,7 +210,13 @@ export default function Hero() {
         </LinkBtn>
       </Links>
 
-      <ScrollHint>scroll ↓</ScrollHint>
+      <ScrollHint>
+        <ScrollLabel>scroll</ScrollLabel>
+        <ScrollChevrons>
+          <span>∨</span>
+          <span>∨</span>
+        </ScrollChevrons>
+      </ScrollHint>
     </Section>
   )
 }

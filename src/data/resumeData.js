@@ -195,9 +195,6 @@ export const education = [
 export const certifications = [
   { name: 'Computer Vision Basics', issuer: 'Coursera', icon: '👁️', color: '#5C7A5C' },
   { name: 'Foundations: Data, Data, Everywhere', issuer: 'Google', icon: '📊', color: '#C17B5C' },
-  { name: 'Interactive Coding: CSS, HTML & Web Dev', issuer: 'Online', icon: '💻', color: '#D4A843' },
-  { name: 'Java Tutorial', issuer: 'Online', icon: '☕', color: '#6B8F71' },
-  { name: 'PHP Tutorial', issuer: 'Online', icon: '🐘', color: '#E8B4A0' },
 ]
 
 export const languages = [

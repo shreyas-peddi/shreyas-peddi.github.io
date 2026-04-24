@@ -21,23 +21,7 @@ export const GlobalStyles = createGlobalStyle`
     overflow-x: hidden;
   }
 
-  /* Subtle CRT scanline overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(0, 0, 0, 0.025) 3px,
-      rgba(0, 0, 0, 0.025) 4px
-    );
-  }
-
-  ::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 4px;
   }
   ::-webkit-scrollbar-track {
