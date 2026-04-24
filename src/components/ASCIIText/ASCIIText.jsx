@@ -110,9 +110,6 @@ class AsciiFilter {
     this.pre.style.top = '50%';
     this.pre.style.transform = 'translate(-50%, -50%)';
     this.pre.style.zIndex = '9';
-    this.pre.style.backgroundAttachment = 'fixed';
-    this.pre.style.mixBlendMode = 'difference';
-    // Green terminal gradient — hue-rotate on mouse shifts it through the spectrum
     this.pre.style.backgroundImage = 'linear-gradient(135deg, #6BFF8A 0%, #3DC47C 50%, #4ECDC4 100%)';
     this.pre.style.webkitBackgroundClip = 'text';
     this.pre.style.webkitTextFillColor = 'transparent';
@@ -216,9 +213,6 @@ class CanvAscii {
     this.camera.position.z = 30;
 
     this.scene = new THREE.Scene();
-    this.mouse = { x: 0, y: 0 };
-
-    this.onMouseMove = this.onMouseMove.bind(this);
     this.setMesh();
     this.setRenderer();
   }
@@ -286,9 +280,6 @@ class CanvAscii {
 
     this.container.appendChild(this.filter.domElement);
     this.setSize(this.width, this.height);
-
-    this.container.addEventListener('mousemove', this.onMouseMove);
-    this.container.addEventListener('touchmove', this.onMouseMove);
   }
 
   setSize(w, h) {
@@ -330,7 +321,6 @@ class CanvAscii {
     this.textCanvas.render();
     this.texture.needsUpdate = true;
     this.mesh.material.uniforms.uTime.value = Math.sin(time);
-    this.updateRotation();
     this.filter.render(this.scene, this.camera);
   }
 
@@ -364,8 +354,6 @@ class CanvAscii {
     if (this.container.contains(this.filter.domElement)) {
       this.container.removeChild(this.filter.domElement);
     }
-    this.container.removeEventListener('mousemove', this.onMouseMove);
-    this.container.removeEventListener('touchmove', this.onMouseMove);
     this.clear();
     this.renderer.dispose();
   }
