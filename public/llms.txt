@@ -1,0 +1,65 @@
+# Shreyas Peddi
+
+> Jr. AI Engineer building agentic RAG pipelines, pgvector stores, and LLM microservices on GCP. Based in Atlanta, GA.
+
+## About
+
+Shreyas Peddi is a Jr. AI Engineer at Octave Holdings & Investments (Alpharetta, GA). He builds production AI systems using Google Gemini API, agentic RAG pipelines with pgvector, and GCP-hosted microservices. He holds an MS in Computer Science from the University of Georgia (GPA 3.7, 2023–2025).
+
+Before AI engineering, Shreyas shipped RESTful microservice APIs and React apps at Byju's (100K+ DAU), automated CI/CD infrastructure at NCR Atleos, and published research in federated learning and medical AI.
+
+## Current Role
+
+- **Title**: Jr. AI Engineer
+- **Company**: Octave Holdings & Investments
+- **Location**: Alpharetta, GA
+- **Since**: August 2025
+- **Key Projects**:
+  - Built agentic RAG pipelines using Gemini API embeddings with a pgvector store to extract and structure data from 10,000+ CRE lease documents — cutting deal-analysis time by 60%
+  - Deployed a production lease-intelligence microservice on GCP (Cloud Run + Cloud Storage) with sub-second semantic retrieval across 500+ embedded documents
+  - Designed few-shot prompt templates for 200+ structured fields per lease (rent, CAM caps, escalation terms), reducing hallucination rates by 40%
+  - Implemented Twilio SMS MFA and hardened cloud infrastructure with monitoring — 99.9% uptime
+
+## Past Experience
+
+- **NCR Atleos** — Software Engineer Intern (May 2024 – Aug 2024, Atlanta, GA)
+  - Automated REST API functional test suites in Postman with Azure DevOps CI/CD — cut manual QA effort by 400%; adopted across 3 teams
+  - Built Logstash CI/CD pipelines with JFrog Artifactory and SonarQube quality gates — 50% fewer deployment errors, 2 days faster releases
+- **Byju's** — Software Engineer (Jun 2022 – Mar 2023, Bengaluru, India)
+  - Developed 20+ RESTful microservice APIs in Node.js/Express.js integrated with CRM systems — 30% less data-sync latency
+  - Built 30+ marketing web pages in React.js serving 100K+ DAU with zero downtime and 25% faster page-load times
+- **HighRadius** — Technology Intern (Jun 2021 – May 2022, Remote)
+  - Built internal web tooling for 5+ enterprise accounts — 30% UI performance improvement, 20% fewer manual onboarding steps
+
+## Education
+
+- **MS in Computer Science** — University of Georgia, GPA 3.7 (Aug 2023 – May 2025, Athens, GA)
+- **BTech in Computer Science, Data Science** — SRM University, AP, GPA 8.3/10 (Jul 2018 – May 2022, Amaravati, India)
+
+## Technical Skills
+
+- **Languages**: Python, JavaScript, SQL, HTML/CSS
+- **Backend & APIs**: Node.js, Express.js, Django, REST APIs, Microservices
+- **Frontend**: React.js, Next.js, JavaScript, HTML/CSS
+- **Cloud & DevOps**: GCP (Cloud Run, Cloud Storage, Vertex AI), AWS, Docker, CI/CD, Azure DevOps, JFrog Artifactory, Git
+- **Databases**: PostgreSQL (pgvector), MySQL, SQLite, MongoDB
+- **Testing & QA**: Postman, Unit / Functional / A/B Testing, SonarQube
+- **AI / ML**: LLMs, RAG, Prompt Engineering, Fine-tuning, RLHF, Federated Learning, CNNs, Transformers
+- **ML Frameworks**: LangChain, PyTorch, TensorFlow, Keras, Hugging Face, Gemini API, Pandas, NumPy
+
+## Notable Projects
+
+- **Lease Abstractor** — Agentic RAG pipeline (Gemini API, pgvector, GCP Cloud Run, Node.js). 10,000+ CRE lease docs, 60% faster deal analysis. Production at Octave Holdings.
+- **ProxyFL-Prune** — Pruning-enhanced federated learning (Python, PyTorch, Opacus). 40% model size reduction, differential privacy preserved.
+- **Glaucoma Detection CNNs** — Benchmarked ResNet50, DenseNet, MobileNet; 94%+ accuracy on medical imaging datasets (TensorFlow, Keras).
+
+## Publication
+
+Mishra, T.K., Mishra, S.K., Sai, K.J., Peddi, S. and Surusomayajula, M. (2022). "Crop Recommendation System Using Support Vector Machine Considering Indian Dataset." In: *Advances in Distributed Computing and Machine Learning*. Springer, Singapore, pp. 501–510.
+
+## Contact
+
+- Email: peddishreyas2@gmail.com
+- GitHub: https://github.com/shreyas-peddi
+- LinkedIn: https://www.linkedin.com/in/shreyas-peddi/
+- Portfolio: https://shreyas-peddi.github.io/
